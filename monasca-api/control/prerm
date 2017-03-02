@@ -2,7 +2,7 @@
 
 case "$1" in
   remove)
-    stop monasca-api
+    systemctl stop monasca-api
   ;;
 esac
 
