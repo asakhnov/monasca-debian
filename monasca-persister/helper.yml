@@ -1,0 +1,7 @@
+---
+- type: file
+  src: ${project.basedir}/src/deb/etc/monasca-persister.service
+  dst: /lib/systemd/system/monasca-persister.service
+- type: file
+  src: ${project.basedir}/src/deb/etc/monasca-persister.logrotate
+  dst: /etc/logrotate.d/monasca-persister

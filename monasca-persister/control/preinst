@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+	install|upgrade)
+		# create the monasca group
+		if ! getent group monasca > /dev/null 2>&1
+		then
+			addgroup --system monasca >/dev/null || true
+		fi
+
+		# create the mon-persister user to avoid running monasca API as root
+		if ! getent passwd mon-persister > /dev/null 2>&1
+		then
+			adduser --quiet \
+				--system \
+				--home /var/lib/monasca/persister \
+				--no-create-home \
+				--ingroup monasca \
+				--shell /bin/false \
+				mon-persister || true
+		fi
+
+		if [ "$(id -gn mon-persister)"  = "nogroup" ]
+		then
+			usermod -g monasca mon-persister
+		fi
+
+		# create log directory
+		mkdir -p /var/log/monasca/persister
+
+		# change the permissions on key directories
+		chown mon-persister:monasca -R /var/log/monasca/persister
+		;;
+	configure)
+	;;
+	abort-upgrade)
+	;;
+	*)
+		echo "preinst called with unknown argument  \`$1'" >&2
+		exit 0
+		;;
+esac
+
+exit 0

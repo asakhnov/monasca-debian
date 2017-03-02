@@ -1,0 +1,11 @@
+/var/log/monasca/persister/*.log {
+    daily
+    missingok
+    rotate 5
+    postrotate
+        systemctl restart monasca-persister >/dev/null 2>&1 || true
+    endscript
+    compress
+    delaycompress
+    notifempty
+}
