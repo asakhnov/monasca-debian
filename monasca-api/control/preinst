@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+	install|upgrade)
+		# create the monasca group
+		if ! getent group monasca > /dev/null 2>&1
+		then
+			addgroup --system monasca >/dev/null || true
+		fi
+
+		# create the mon-api user to avoid running monasca API as root
+		if ! getent passwd mon-api > /dev/null 2>&1
+		then
+			adduser --quiet \
+				--system \
+				--home /var/lib/monasca/api \
+				--no-create-home \
+				--ingroup monasca \
+				--shell /bin/false \
+				mon-api || true
+		fi
+
+		if [ "$(id -gn mon-api)"  = "nogroup" ]
+		then
+			usermod -g monasca mon-api
+		fi
+
+		# create log directory
+		mkdir -p /var/log/monasca/api
+
+		# change the permissions on key directories
+		chown mon-api:monasca -R /var/log/monasca/api
+		;;
+	configure)
+	;;
+	abort-upgrade)
+	;;
+	*)
+		echo "preinst called with unknown argument  \`$1'" >&2
+		exit 0
+		;;
+esac
+
+exit 0
