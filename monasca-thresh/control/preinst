@@ -10,28 +10,28 @@ case "$1" in
 			addgroup --system monasca >/dev/null || true
 		fi
 
-		# create the mon-persister user to avoid running monasca Persister as root
-		if ! getent passwd mon-persister > /dev/null 2>&1
+		# create the mon-thresh user to avoid running monasca Thresh as root
+		if ! getent passwd mon-thresh > /dev/null 2>&1
 		then
 			adduser --quiet \
 				--system \
-				--home /var/lib/monasca/persister \
+				--home /var/lib/monasca/thresh \
 				--no-create-home \
 				--ingroup monasca \
 				--shell /bin/false \
-				mon-persister || true
+				mon-thresh || true
 		fi
 
-		if [ "$(id -gn mon-persister)"  = "nogroup" ]
+		if [ "$(id -gn mon-thresh)"  = "nogroup" ]
 		then
-			usermod -g monasca mon-persister
+			usermod -g monasca mon-thresh
 		fi
 
 		# create log directory
-		mkdir -p /var/log/monasca/persister
+		mkdir -p /var/log/monasca/thresh
 
 		# change the permissions on key directories
-		chown mon-persister:monasca -R /var/log/monasca/persister
+		chown mon-thresh:monasca -R /var/log/monasca/thresh
 		;;
 	configure)
 	;;

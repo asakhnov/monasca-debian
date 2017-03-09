@@ -1,0 +1,7 @@
+---
+- type: file
+  src: ${project.basedir}/src/deb/etc/monasca-thresh.service
+  dst: /lib/systemd/system/monasca-thresh.service
+- type: file
+  src: ${project.basedir}/src/deb/etc/monasca-thresh.logrotate
+  dst: /etc/logrotate.d/monasca-thresh
