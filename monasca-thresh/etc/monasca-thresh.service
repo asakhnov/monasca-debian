@@ -22,7 +22,6 @@ After=network.target
 [Service]
 User=mon-thresh
 Group=monasca
-ExecStart=/usr/bin/java -Dfile.encoding=UTF-8 -Xmx128m -cp /opt/monasca/monasca-thresh.jar monasca.api.MonApiApplication server /etc/monasca/api-config.yml
 ExecStart=/opt/storm/bin/storm jar /opt/monasca/monasca-thresh.jar monasca.thresh.ThresholdingEngine /etc/monasca/thresh-config.yml thresh-cluster
 Restart=on-failure
 
